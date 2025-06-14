@@ -31,10 +31,9 @@ const handleJSRequest = async (request: Request, ctx: ExecutionContext) => {
   // We need to modify hardcoded URL because there's a high chance that "version" is not provided in the incoming script request.
   const jsContent = await response.text();
   const workerHost = new URL(request.url).origin;
-  const modifiedContent = jsContent.replace(
-    new RegExp(CWA_API, "g"),
-    `${workerHost}/cdn-cgi/rum`,
-  );
+  const modifiedContent = jsContent
+    .replace(new RegExp(CWA_API, "g"), `${workerHost}/cdn-cgi/rum`)
+    .replace(/cdn\-cgi/g, "informera");
 
   const headers = new Headers(response.headers);
   headers.set("Cache-Control", `public, max-age=${CACHE_TTL}, immutable`);
