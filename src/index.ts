@@ -40,10 +40,13 @@ const handleJSRequest = async (request: Request, ctx: ExecutionContext) => {
   headers.set("Cache-Control", `public, max-age=${CACHE_TTL}, immutable`);
   headers.set("CDN-Cache-Control", `public, max-age=${CDN_CACHE_TTL}`);
 
+  // Add CORS headers to JS responses
+  const corsHeaders = addCORSHeaders(headers, request.headers.get("Origin"));
+
   const cachedResponse = new Response(modifiedContent, {
     status: response.status,
     statusText: response.statusText,
-    headers,
+    headers: corsHeaders,
   });
 
   ctx.waitUntil(caches.default.put(cacheKey, cachedResponse.clone()));

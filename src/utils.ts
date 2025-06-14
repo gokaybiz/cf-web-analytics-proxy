@@ -24,10 +24,18 @@ export const addCORSHeaders = (
 ): Headers => {
   const headers = new Headers(response);
   headers.set("Access-Control-Allow-Origin", origin || "*");
-  headers.set("Access-Control-Allow-Headers", "content-type");
-  headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  headers.set(
+    "Access-Control-Allow-Headers",
+    "content-type, user-agent, accept, accept-language, accept-encoding, cache-control, pragma",
+  );
+  headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS, HEAD",
+  );
   headers.set("Access-Control-Allow-Credentials", "true");
   headers.set("Access-Control-Max-Age", CACHE_TTL.toString());
+  headers.set("Access-Control-Expose-Headers", "content-length, content-type");
+  headers.set("Vary", "Origin");
   return headers;
 };
 
