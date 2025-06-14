@@ -58,10 +58,22 @@ const handleAPIRequest = async (request: Request) => {
   const proxyRequest = createProxyRequest(request, clientInfo.ip);
 
   // Route to correct CWA endpoint
-  let targetUrl = `${CWA_API}${url.search}`;
-
-  if (url.pathname.includes("/beacon/performance")) {
+  let targetUrl: string;
+  if (url.pathname.includes("/rum")) {
+    targetUrl = `${CWA_API}${url.search}`;
+  } else if (url.pathname.includes("/beacon/performance")) {
     targetUrl = `${CWA_BEACON}${url.search}`;
+  } else {
+    return new Response(
+      JSON.stringify({
+        error: "Bad request.",
+        timestamp: Date.now(),
+      }),
+      {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const response = await fetch(targetUrl, proxyRequest);
